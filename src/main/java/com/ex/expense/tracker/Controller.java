@@ -2,6 +2,8 @@ package com.ex.expense.tracker;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/tracker")
 public class Controller {
@@ -9,9 +11,10 @@ public class Controller {
     public Controller(ExService exService){
         this.exService = exService;
     }
-    @PostMapping("/save")
-    public Expense saveExpense(@RequestBody Expense expense){
-          return  exService.saveExpense(expense);
+    @PostMapping("/add/{cId}/{des}/{amount}")
+    public Expense saveExpense(@PathVariable("cId") int cId, @PathVariable("des") String des,
+                               @PathVariable("amount")BigDecimal amount){
+          return  exService.saveExpense(cId,des,amount);
 
     }
 

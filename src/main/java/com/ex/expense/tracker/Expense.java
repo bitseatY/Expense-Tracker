@@ -12,13 +12,16 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  long id;
     private LocalDateTime instant;
-    private  long catId;
-    private  String des;           //https://github.com/bitseatY/Expense-Tracker.git
+    private  String des;
     private BigDecimal amount;
-    public Expense(long catId ,String des,BigDecimal amount){
+    @ManyToOne
+    @JoinColumn(name="cat_id")
+    private  Category category;
+
+    public Expense(Category category, String des, BigDecimal amount){
         this.amount=amount;
         this.des=des;
-        this.catId=catId;
+        this.category=category;
         instant=LocalDateTime.now();
     }
 
@@ -29,8 +32,8 @@ public class Expense {
         return  instant;
     }
 
-    public long getCatId() {
-        return catId;
+    public Category getCategory() {
+        return category;
     }
 
     public String getDes() {
