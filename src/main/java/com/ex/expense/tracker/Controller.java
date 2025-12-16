@@ -30,6 +30,20 @@ public class Controller {
 
         return exService.getSummary(start,end);
     }
+    @PatchMapping("/edit/{id}")
+
+    public  Expense edit(@PathVariable("id") int id,@RequestBody Expense updatedExpense){
+         Expense expense=exService.findById(id);
+         if(updatedExpense.getCategory()!=null)
+                expense.setCategory(updatedExpense.getCategory());
+         if(updatedExpense.getAmount()!=null)
+             expense.setAmount(updatedExpense.getAmount());
+         if(updatedExpense.getDes()!=null)
+             expense.setDes(updatedExpense.getDes());
+         if(updatedExpense.getDate()!=null)
+             expense.setDate(updatedExpense.getDate());
+         return  exService.saveExpense(expense);
+    }
 
 
 

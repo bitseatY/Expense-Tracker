@@ -45,4 +45,21 @@ public class Expense {
     public BigDecimal getAmount() {
         return amount;
     }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
+    }
+
 }

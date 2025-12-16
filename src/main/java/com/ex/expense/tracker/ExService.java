@@ -4,12 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,8 +17,15 @@ public class ExService {
           this.exRepository=exRepository;
           this.categoryRepo=categoryRepo;
      }
+     public Expense findById(long id){
+          return exRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("expense not found"));
+     }
+     public Expense saveExpense(Expense expense){
+          return exRepository.save(expense);
+     }
+
      public Expense saveExpense(int cId, String des, BigDecimal amount){
-          Category category=categoryRepo.findById(cId).orElseThrow(()->new CategoryNotFoundException("category not found"));
+          Category category=categoryRepo.findById(cId).orElseThrow(()->new ResourceNotFoundException("category not found"));
           return exRepository.save(new Expense(category,des,amount));
      }
 
@@ -37,6 +41,14 @@ public class ExService {
               }
          return summaryExpenses;
 
+     }
+     public Expense edit( long id,int cat_id,String des ,BigDecimal amount,LocalDate date){
+          Expense expense=exRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("expense not found") );
+          expense.setAmount(amount);
+          expense.setDate(date);
+          expense.setCategory(categoryRepo.findById(cat_id).orElseThrow(()->new ResourceNotFoundException("category not found ")));
+          expense.setDes(des);
+          return  expense;
      }
 
 
