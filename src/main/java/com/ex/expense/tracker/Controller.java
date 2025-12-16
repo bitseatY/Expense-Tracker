@@ -1,8 +1,12 @@
 package com.ex.expense.tracker;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tracker")
@@ -17,6 +21,17 @@ public class Controller {
           return  exService.saveExpense(cId,des,amount);
 
     }
+    @GetMapping("/getLog")
+    public Page<Expense> getLog(@RequestParam int page,@RequestParam int size){
+         return exService.getLog(page,size);
+    }
+    @GetMapping("/getSummary/{start}/{end}")
+    public List<SummaryDTO> getSummary(@PathVariable("start")LocalDate start, @PathVariable("end") LocalDate end){
+
+        return exService.getSummary(start,end);
+    }
+
+
 
 
 
