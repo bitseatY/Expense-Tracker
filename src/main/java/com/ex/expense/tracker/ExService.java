@@ -13,9 +13,11 @@ import java.util.List;
 public class ExService {
      private ExRepository exRepository;
      private CategoryRepo categoryRepo;
-     public ExService(ExRepository exRepository,CategoryRepo categoryRepo){
+     private RecurringExpensesRepo recurringExpensesRepo;
+     public ExService(ExRepository exRepository,CategoryRepo categoryRepo,RecurringExpensesRepo recurringExpensesRepo){
           this.exRepository=exRepository;
           this.categoryRepo=categoryRepo;
+          this.recurringExpensesRepo=recurringExpensesRepo;
      }
      public Expense findById(long id){
           return exRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("expense not found"));
@@ -49,6 +51,18 @@ public class ExService {
           expense.setCategory(categoryRepo.findById(cat_id).orElseThrow(()->new ResourceNotFoundException("category not found ")));
           expense.setDes(des);
           return  expense;
+     }
+     public void delete(long id){
+        exRepository.deleteById(id);
+     }
+     public RecurringExpense saveRecurringExpense(int cat_id, BigDecimal amount,String des,String frequency){
+          Category category=categoryRepo.findById(cat_id).orElseThrow(()->new ResourceNotFoundException("category not found."));
+          RecurringExpense recurringExpense=new RecurringExpense(category,amount,frequency,des);
+          return  recurringExpensesRepo.save(recurringExpense);
+     }
+     public  void addExpenseFromRecurring(RecurringExpense recurringExpense){
+          Expense expense=new Expense(recurringExpense.getCategory(),recurringExpense.getDes(),recurringExpense.getAmount());
+          saveExpense(expense);
      }
 
 

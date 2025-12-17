@@ -1,7 +1,6 @@
 package com.ex.expense.tracker;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -30,6 +29,7 @@ public class Controller {
 
         return exService.getSummary(start,end);
     }
+
     @PatchMapping("/edit/{id}")
 
     public  Expense edit(@PathVariable("id") int id,@RequestBody Expense updatedExpense){
@@ -43,6 +43,14 @@ public class Controller {
          if(updatedExpense.getDate()!=null)
              expense.setDate(updatedExpense.getDate());
          return  exService.saveExpense(expense);
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deleteExpense(@PathVariable("id") long id){
+        exService.delete(id);
+    }
+    @PostMapping("saveRecurring")
+    public RecurringExpense saveRecurringExpense(@RequestParam int cat_id,@RequestParam BigDecimal amount,@RequestParam String des,@RequestParam String frequency){
+       return  exService.saveRecurringExpense(cat_id,amount,des,frequency);
     }
 
 
