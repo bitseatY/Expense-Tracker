@@ -14,12 +14,19 @@ public class Controller {
     public Controller(ExService exService){
         this.exService = exService;
     }
+
+    @PostMapping("/adduser/{balance}")
+    public String  createUser(@PathVariable("balance") BigDecimal balance){
+          return      exService.saveUser(balance);
+    }
+
     @PostMapping("/add/{cId}/{des}/{amount}")
-    public Expense saveExpense(@PathVariable("cId") int cId, @PathVariable("des") String des,
+    public String saveExpense(@PathVariable("cId") int cId, @PathVariable("des") String des,
                                @PathVariable("amount")BigDecimal amount){
           return  exService.saveExpense(cId,des,amount);
 
     }
+
     @GetMapping("/getLog")
     public Page<Expense> getLog(@RequestParam int page,@RequestParam int size){
          return exService.getLog(page,size);
@@ -32,24 +39,16 @@ public class Controller {
 
     @PatchMapping("/edit/{id}")
 
-    public  Expense edit(@PathVariable("id") int id,@RequestBody Expense updatedExpense){
-         Expense expense=exService.findById(id);
-         if(updatedExpense.getCategory()!=null)
-                expense.setCategory(updatedExpense.getCategory());
-         if(updatedExpense.getAmount()!=null)
-             expense.setAmount(updatedExpense.getAmount());
-         if(updatedExpense.getDes()!=null)
-             expense.setDes(updatedExpense.getDes());
-         if(updatedExpense.getDate()!=null)
-             expense.setDate(updatedExpense.getDate());
-         return  exService.saveExpense(expense);
+    public  String edit(@PathVariable("id") int id,@RequestBody Expense updatedExpense){
+          return exService.edit(id,updatedExpense);
     }
+
     @DeleteMapping("/delete/{id}")
-    public void deleteExpense(@PathVariable("id") long id){
-        exService.delete(id);
+    public String deleteExpense(@PathVariable("id") long id){
+        return exService.delete(id);
     }
     @PostMapping("saveRecurring")
-    public RecurringExpense saveRecurringExpense(@RequestParam int cat_id,@RequestParam BigDecimal amount,@RequestParam String des,@RequestParam String frequency){
+    public String saveRecurringExpense(@RequestParam int cat_id,@RequestParam BigDecimal amount,@RequestParam String des,@RequestParam String frequency){
        return  exService.saveRecurringExpense(cat_id,amount,des,frequency);
     }
 
