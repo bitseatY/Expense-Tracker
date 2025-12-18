@@ -1,11 +1,9 @@
-package com.ex.expense.tracker;
+package Entities;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name="recurring_expenses")
@@ -25,7 +23,7 @@ public class RecurringExpense {
     private LocalDate nextRunDate;
     private String status;
     public RecurringExpense(){}
-    public RecurringExpense(Category category,BigDecimal amount,String frequency,String des){
+    public RecurringExpense(Category category, BigDecimal amount, String frequency, String des){
         this.category=category;
         this.frequency=frequency;
         startDate=LocalDate.now();

@@ -1,4 +1,4 @@
-package com.ex.expense.tracker;
+package Exceptions;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String message){

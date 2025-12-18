@@ -1,5 +1,8 @@
-package com.ex.expense.tracker;
+package Schedulers;
 
+import Entities.RecurringExpense;
+import Repositories.RecurringExpensesRepo;
+import Services.ExService;
 import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,7 +16,7 @@ import java.util.List;
 public class RecurringExpenseScheduler {
     private RecurringExpensesRepo recurringExpensesRepo;
     private ExService exService;
-    public RecurringExpenseScheduler(RecurringExpensesRepo recurringExpensesRepo,ExService exService){
+    public RecurringExpenseScheduler(RecurringExpensesRepo recurringExpensesRepo, ExService exService){
         this.recurringExpensesRepo=recurringExpensesRepo;
         this.exService=exService;
     }

@@ -1,5 +1,6 @@
-package com.ex.expense.tracker;
+package Repositories;
 
+import Entities.RecurringExpense;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

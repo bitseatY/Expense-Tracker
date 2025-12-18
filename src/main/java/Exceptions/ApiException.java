@@ -1,4 +1,4 @@
-package com.ex.expense.tracker;
+package Exceptions;
 
 import java.time.LocalDateTime;
 
@@ -6,7 +6,7 @@ public class ApiException {
     private String message;
     private LocalDateTime instant;
     private int status;
-    public ApiException(String message,int status){
+    public ApiException(String message, int status){
         this.message=message;
         this.status=status;
         instant=LocalDateTime.now();

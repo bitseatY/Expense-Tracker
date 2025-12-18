@@ -1,10 +1,21 @@
-package com.ex.expense.tracker;
+package Services;
 
+
+import DTOs.ExpenseDTO;
+import DTOs.SummaryDTO;
+import Entities.Category;
+import Entities.Expense;
+import Entities.RecurringExpense;
+import Entities.User;
+import Exceptions.ResourceNotFoundException;
+import Repositories.CategoryRepo;
+import Repositories.ExRepository;
+import Repositories.RecurringExpensesRepo;
+import Repositories.UserRepo;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,15 +29,15 @@ public class ExService {
      private RecurringExpensesRepo recurringExpensesRepo;
      private UserRepo userRepo;
      private static  final int userId=1;
-     public ExService(ExRepository exRepository,CategoryRepo categoryRepo,RecurringExpensesRepo recurringExpensesRepo,UserRepo userRepo){
+     public ExService(ExRepository exRepository, CategoryRepo categoryRepo, RecurringExpensesRepo recurringExpensesRepo, UserRepo userRepo){
           this.exRepository=exRepository;
           this.categoryRepo=categoryRepo;
           this.recurringExpensesRepo=recurringExpensesRepo;
           this.userRepo=userRepo;
      }
-     public String saveUser(BigDecimal balance){
-           userRepo.save(new User(balance));
-           return String.format("user successfully created.\n Initial Balance=%.2f",balance);
+     public String saveUser(@Valid User user){
+           userRepo.save(user);
+           return String.format("user successfully created.\n Initial Balance=%.2f",user.getBalance());
      }
 
      public Expense findById(long id){
@@ -64,41 +75,34 @@ public class ExService {
      }
 
      public String delete(long id){
-          Expense expense=exRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("expense not found"));
+          Expense expense=exRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("expense with id "+id+" not found"));
           User user=getUser();
           user.setBalance(getUser().getBalance().add(expense.getAmount()));
           userRepo.save(user);
           exRepository.deleteById(id);
           return String.format("Expense successfully deleted. \n Current Balance= %.2f ETB",getUser().getBalance());
      }
-
-     public  String edit(int id, Expense updatedExpense){
+     public  String edit(int id, @Valid ExpenseDTO updatedExpense){
           Expense expense=findById(id);
           if(updatedExpense.getCategory()!=null)
                expense.setCategory(updatedExpense.getCategory());
-          if(updatedExpense.getAmount()!=null){
+          if(updatedExpense.getAmount()!=null&&updatedExpense.getAmount().compareTo(BigDecimal.ONE)>0){
                BigDecimal newBalance=getUser().getBalance().add(expense.getAmount());
                User user=getUser();
                user.setBalance(newBalance);
                userRepo.save(user);
                expense.setAmount(updatedExpense.getAmount());
           }
-          expense.setAmount(updatedExpense.getAmount());
-          if(updatedExpense.getDes()!=null)
+          if(updatedExpense.getDes()!=null&&!updatedExpense.getDes().isBlank())
                expense.setDes(updatedExpense.getDes());
           if(updatedExpense.getDate()!=null)
                expense.setDate(updatedExpense.getDate());
           return   saveExpense(expense);
      }
-
-
-
-
-
      public Page<Expense> getLog(int page, int size){
           return exRepository.findAll(PageRequest.of(page,size));
      }
-     public List<SummaryDTO> getSummary(LocalDate start,LocalDate end){
+     public List<SummaryDTO> getSummary(LocalDate start, LocalDate end){
               List<SummaryDTO> summaryExpenses=exRepository.findExpensesToSummarize(start,end);
               BigDecimal total=summaryExpenses.stream().map(SummaryDTO::getTotal).reduce(BigDecimal.ZERO,BigDecimal::add);
               for(SummaryDTO summaryDTO:summaryExpenses){

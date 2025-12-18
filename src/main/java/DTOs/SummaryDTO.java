@@ -1,4 +1,4 @@
-package com.ex.expense.tracker;
+package DTOs;
 
 import java.math.BigDecimal;
 
@@ -6,7 +6,7 @@ public class SummaryDTO {
     private String category;
     private BigDecimal total;
     private  String percentage;
-    public SummaryDTO(String category,BigDecimal total){
+    public SummaryDTO(String category, BigDecimal total){
 
         this.total=total;
         this.category=category;

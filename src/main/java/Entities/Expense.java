@@ -1,6 +1,9 @@
-package com.ex.expense.tracker;
+package Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,12 +14,17 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  long id;
+    @NotNull
     private LocalDate date;
+    @NotBlank
     private  String des;
+    @NotNull
+    @Min(1)
     private BigDecimal amount;
-    @ManyToOne
+    @ManyToOne(fetch =FetchType.LAZY )
     @JoinColumn(name="cat_id")
-    private  Category category;
+    @NotNull
+    private Category category;
 
     public Expense(){}
 
